@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ควงควงมินิมาร์ท</title>
+  <style>
+    *{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:#f8f7f4;color:#222;padding-bottom:90px}
+    header{background:#fff;padding:14px;position:sticky;top:0;z-index:20;border-bottom:1px solid #eee;box-shadow:0 4px 20px rgba(0,0,0,.035)}
+    .topbar,.container,.tabs{max-width:1080px;margin:auto}.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .logo{display:flex;align-items:center;gap:10px}.mark{width:42px;height:42px;border-radius:14px;background:#222;color:#fff;display:grid;place-items:center;font-weight:800}
+    .logo strong{display:block;font-size:18px}.logo span{font-size:11px;color:#777;letter-spacing:1.5px}
+    .cartbtn{border:0;background:#222;color:#fff;border-radius:999px;padding:11px 14px;font-weight:700;cursor:pointer}
+    .search{max-width:1080px;margin:12px auto 0}.search input{width:100%;padding:13px 16px;border:1px solid #e5e5e5;background:#f8f8f8;border-radius:16px;font-size:15px}
+    .hero{margin:14px auto;background:linear-gradient(135deg,#222,#505050);color:#fff;border-radius:24px;padding:22px;display:flex;justify-content:space-between;gap:14px}
+    .hero h2{margin:0 0 5px;font-size:22px}.hero p{margin:0;color:rgba(255,255,255,.75);font-size:14px}.badge{background:rgba(255,255,255,.14);border-radius:999px;padding:9px 12px;white-space:nowrap}
+    .tabs{display:flex;gap:9px;overflow-x:auto;padding:14px;background:#f8f7f4;position:sticky;top:123px;z-index:15}
+    .tab{border:1px solid #e6e1d8;background:#fff;padding:9px 14px;border-radius:999px;white-space:nowrap;cursor:pointer}.tab.active{background:#222;color:#fff;border-color:#222}
+    .section{display:flex;justify-content:space-between;align-items:end;margin:6px 0 14px}.section h3{margin:0;font-size:20px}.section span{color:#777;font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:14px}.card{background:#fff;border-radius:22px;overflow:hidden;border:1px solid #ededed;box-shadow:0 8px 24px rgba(0,0,0,.045)}
+    .imgwrap{position:relative;background:#f2f2f2}.card img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}.tag{position:absolute;left:10px;top:10px;background:rgba(255,255,255,.9);border-radius:999px;padding:5px 8px;font-size:11px;color:#555}
+    .info{padding:12px}.name{font-weight:700;font-size:15px;min-height:40px;line-height:1.35}.price{margin-top:6px;color:#111;font-weight:800;font-size:17px}
+    .qtyrow{display:flex;align-items:center;justify-content:space-between;margin-top:11px;background:#f3f3f3;border-radius:999px;padding:5px}
+    .qtyrow button{width:34px;height:34px;border-radius:50%;border:0;background:#222;color:white;font-size:21px;cursor:pointer}.qty{font-weight:800;min-width:28px;text-align:center}
+    .cartbar{position:fixed;left:12px;right:12px;bottom:12px;background:#222;color:#fff;border-radius:22px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;max-width:980px;margin:auto;z-index:30;box-shadow:0 12px 34px rgba(0,0,0,.25)}
+    .cartbar button,.submit{border:0;background:#fff;color:#111;font-weight:800;padding:11px 15px;border-radius:14px;cursor:pointer}.mini{color:rgba(255,255,255,.78);font-size:13px}
+    .drawer{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;z-index:40}.drawer.open{display:flex}
+    .drawercontent{background:#fff;width:100%;max-height:88vh;overflow-y:auto;border-radius:28px 28px 0 0;padding:18px;max-width:760px;margin:0 auto}
+    .head{display:flex;justify-content:space-between;align-items:center}.head h2{margin:0}.close{border:0;background:#f2f2f2;padding:9px 13px;border-radius:12px;cursor:pointer}
+    .cartitem{display:grid;grid-template-columns:1fr auto;gap:8px;padding:13px 0;border-bottom:1px solid #eee}.cartitem small{color:#777}
+    .summary{background:#f8f8f8;border-radius:18px;padding:12px;margin-top:14px}.line{display:flex;justify-content:space-between;margin:9px 0;font-size:16px}.total{font-size:21px;font-weight:900;border-top:1px solid #ddd;padding-top:11px}
+    label{display:block;margin-top:12px;font-weight:800}input,textarea,select{width:100%;padding:12px;margin-top:6px;border:1px solid #e2e2e2;border-radius:14px;font-size:15px}textarea{min-height:72px}
+    .empty{padding:24px;text-align:center;color:#777;background:#fff;border-radius:18px;border:1px dashed #ddd}
+    @media(max-width:560px){.hero{flex-direction:column}.tabs{top:123px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.name{font-size:14px}}
+  </style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div class="logo"><div class="mark">KK</div><div><strong>ควงควงมินิมาร์ท</strong><span>MINIMART ONLINE</span></div></div>
+    <button class="cartbtn" onclick="openCart()">🛒 <span id="topCartCount">0</span></button>
+  </div>
+  <div class="search"><input id="searchInput" placeholder="ค้นหาสินค้า เช่น น้ำเปล่า มาม่า ขนม สบู่" oninput="renderProducts()"></div>
+</header>
+
+<section class="container">
+  <div class="hero">
+    <div><h2>ของใช้ ของกิน เครื่องดื่ม</h2><p>เลือกสินค้า กด + ใส่รถเข็น แล้วส่งออเดอร์ทาง LINE</p></div>
+    <div class="badge">🛵 ส่งไวใกล้ร้าน</div>
+  </div>
+</section>
+
+<div class="tabs" id="tabs"></div>
+<main class="container">
+  <div class="section"><h3 id="sectionTitle">สินค้าทั้งหมด</h3><span id="productCount">0 รายการ</span></div>
+  <div class="grid" id="productGrid"></div>
+</main>
+
+<div class="cartbar">
+  <div><strong id="cartCount">0 รายการ</strong><br><span class="mini" id="cartTotal">รวม 0 บาท</span></div>
+  <button onclick="openCart()">ดูรถเข็น</button>
+</div>
+
+<div class="drawer" id="drawer">
+  <div class="drawercontent">
+    <div class="head"><h2>รถเข็น</h2><button class="close" onclick="closeCart()">ปิด</button></div>
+    <div id="cartItems"></div>
+    <div class="summary">
+      <div class="line"><span>ค่าสินค้า</span><strong id="subTotal">0 บาท</strong></div>
+      <div class="line"><span>ค่าส่ง</span><strong id="deliveryFee">20 บาท</strong></div>
+      <div class="line total"><span>ยอดรวม</span><strong id="grandTotal">0 บาท</strong></div>
+    </div>
+    <label>ชื่อลูกค้า</label><input id="customerName" placeholder="เช่น คุณแนน">
+    <label>เบอร์โทร</label><input id="phone" placeholder="เช่น 063-xxx-xxxx">
+    <label>ที่อยู่ / จุดสังเกต</label><textarea id="address" placeholder="บ้านเลขที่ ซอย คอนโด หรือจุดสังเกต"></textarea>
+    <label>วิธีรับสินค้า</label><select id="deliveryType" onchange="renderCart()"><option value="delivery">จัดส่ง ค่าส่ง 20 บาท</option><option value="pickup">รับหน้าร้าน ค่าส่ง 0 บาท</option></select>
+    <label>หมายเหตุ</label><textarea id="note" placeholder="เช่น โทรก่อนส่ง / ขอของเย็น"></textarea>
+    <button class="submit" style="width:100%;margin-top:16px;background:#222;color:#fff" onclick="sendToLine()">ส่งออเดอร์ทาง LINE</button>
+  </div>
+</div>
+
+<script>
+const products = [
+  { id:'D001', name:'น้ำเปล่า 600 ml', price:10, category:'เครื่องดื่ม', image:'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?auto=format&fit=crop&w=600&q=80' },
+  { id:'D002', name:'น้ำเปล่าแพ็ก 12 ขวด', price:55, category:'เครื่องดื่ม', image:'https://images.unsplash.com/photo-1564419320461-6870880221ad?auto=format&fit=crop&w=600&q=80' },
+  { id:'D003', name:'โค้กกระป๋อง', price:18, category:'เครื่องดื่ม', image:'https://images.unsplash.com/photo-1581006852262-e4307cf6283a?auto=format&fit=crop&w=600&q=80' },
+  { id:'D004', name:'น้ำส้มพร้อมดื่ม', price:20, category:'เครื่องดื่ม', image:'https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=600&q=80' },
+  { id:'D005', name:'ชาเขียวขวด', price:25, category:'เครื่องดื่ม', image:'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=600&q=80' },
+  { id:'D006', name:'กาแฟกระป๋อง', price:20, category:'เครื่องดื่ม', image:'https://images.unsplash.com/photo-1522992319-0365e5f11656?auto=format&fit=crop&w=600&q=80' },
+
+  { id:'S001', name:'ขนมมันฝรั่ง', price:25, category:'ขนม', image:'https://images.unsplash.com/photo-1621447504864-d8686e12698c?auto=format&fit=crop&w=600&q=80' },
+  { id:'S002', name:'ขนมปังกรอบ', price:20, category:'ขนม', image:'https://images.unsplash.com/photo-1585238342028-78d387f4a707?auto=format&fit=crop&w=600&q=80' },
+  { id:'S003', name:'เวเฟอร์', price:15, category:'ขนม', image:'https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=600&q=80' },
+  { id:'S004', name:'ลูกอม', price:10, category:'ขนม', image:'https://images.unsplash.com/photo-1582058091505-f87a2e55a40f?auto=format&fit=crop&w=600&q=80' },
+  { id:'S005', name:'ช็อกโกแลตแท่ง', price:25, category:'ขนม', image:'https://images.unsplash.com/photo-1511381939415-e44015466834?auto=format&fit=crop&w=600&q=80' },
+
+  { id:'F001', name:'มาม่า 1 ซอง', price:8, category:'มาม่า/อาหารแห้ง', image:'https://images.unsplash.com/photo-1612927601601-6638404737ce?auto=format&fit=crop&w=600&q=80' },
+  { id:'F002', name:'มาม่าคัพ', price:18, category:'มาม่า/อาหารแห้ง', image:'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80' },
+  { id:'F003', name:'ปลากระป๋อง', price:22, category:'มาม่า/อาหารแห้ง', image:'https://images.unsplash.com/photo-1604908177522-040a1cb46b6f?auto=format&fit=crop&w=600&q=80' },
+  { id:'F004', name:'ข้าวสาร 1 กก.', price:45, category:'มาม่า/อาหารแห้ง', image:'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80' },
+  { id:'F005', name:'น้ำปลา', price:25, category:'มาม่า/อาหารแห้ง', image:'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80' },
+
+  { id:'C001', name:'นมสดกล่อง', price:15, category:'ของแช่เย็น', image:'https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=600&q=80' },
+  { id:'C002', name:'โยเกิร์ตถ้วย', price:18, category:'ของแช่เย็น', image:'https://images.unsplash.com/photo-1571212515416-fef01fc43637?auto=format&fit=crop&w=600&q=80' },
+  { id:'C003', name:'ไข่ไก่ 1 ฟอง', price:5, category:'ของแช่เย็น', image:'https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=600&q=80' },
+  { id:'C004', name:'ไส้กรอกแพ็ก', price:35, category:'ของแช่เย็น', image:'https://images.unsplash.com/photo-1619740455993-9e612b1af08a?auto=format&fit=crop&w=600&q=80' },
+
+  { id:'ICE01', name:'น้ำแข็งถุงเล็ก', price:10, category:'น้ำแข็ง', image:'https://images.unsplash.com/photo-1563225409-127c18758bd5?auto=format&fit=crop&w=600&q=80' },
+  { id:'ICE02', name:'น้ำแข็งถุงใหญ่', price:20, category:'น้ำแข็ง', image:'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&w=600&q=80' },
+
+  { id:'H001', name:'สบู่ก้อน', price:15, category:'ของใช้', image:'https://images.unsplash.com/photo-1607006483224-942a9fef2f1e?auto=format&fit=crop&w=600&q=80' },
+  { id:'H002', name:'ยาสระผม', price:59, category:'ของใช้', image:'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80' },
+  { id:'H003', name:'ผงซักฟอก', price:65, category:'ของใช้', image:'https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?auto=format&fit=crop&w=600&q=80' },
+  { id:'H004', name:'กระดาษทิชชู่', price:35, category:'ของใช้', image:'https://images.unsplash.com/photo-1584559582128-b8be739912e1?auto=format&fit=crop&w=600&q=80' },
+  { id:'H005', name:'น้ำยาล้างจาน', price:39, category:'ของใช้', image:'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80' },
+  { id:'H006', name:'ยาสีฟัน', price:35, category:'ของใช้', image:'https://images.unsplash.com/photo-1607613009820-a29f7bb81c04?auto=format&fit=crop&w=600&q=80' }
+];
+
+let activeCategory='ทั้งหมด';
+const cart={};
+
+function categories(){ return ['ทั้งหมด','เครื่องดื่ม','ขนม','มาม่า/อาหารแห้ง','ของแช่เย็น','น้ำแข็ง','ของใช้']; }
+
+function renderTabs(){
+  document.getElementById('tabs').innerHTML = categories().map(cat =>
+    `<button class="tab ${cat===activeCategory?'active':''}" onclick="setCategory('${cat}')">${cat}</button>`
+  ).join('');
+}
+function setCategory(cat){ activeCategory=cat; renderTabs(); renderProducts(); }
+function filteredProducts(){
+  const keyword=document.getElementById('searchInput').value.trim().toLowerCase();
+  return products.filter(p=>{
+    const matchCategory = activeCategory==='ทั้งหมด' || p.category===activeCategory;
+    const matchKeyword = !keyword || p.name.toLowerCase().includes(keyword) || p.category.toLowerCase().includes(keyword) || p.id.toLowerCase().includes(keyword);
+    return matchCategory && matchKeyword;
+  });
+}
+function renderProducts(){
+  const list=filteredProducts();
+  document.getElementById('sectionTitle').textContent = activeCategory==='ทั้งหมด' ? 'สินค้าทั้งหมด' : activeCategory;
+  document.getElementById('productCount').textContent = `${list.length} รายการ`;
+  document.getElementById('productGrid').innerHTML = list.length ? list.map(p=>`
+    <div class="card">
+      <div class="imgwrap"><span class="tag">${p.category}</span><img src="${p.image}" alt="${p.name}"></div>
+      <div class="info">
+        <div class="name">${p.name}</div><div class="price">฿${p.price}</div>
+        <div class="qtyrow"><button onclick="changeQty('${p.id}',-1)">−</button><span class="qty">${cart[p.id]||0}</span><button onclick="changeQty('${p.id}',1)">+</button></div>
+      </div>
+    </div>`).join('') : '<div class="empty">ไม่พบสินค้าที่ค้นหา</div>';
+}
+function changeQty(id,delta){
+  cart[id]=Math.max(0,(cart[id]||0)+delta);
+  if(cart[id]===0) delete cart[id];
+  renderProducts(); renderCartBar(); renderCart();
+}
+function getCartList(){
+  return Object.entries(cart).map(([id,qty])=>{ const product=products.find(p=>p.id===id); return {...product,qty,total:product.price*qty}; });
+}
+function subtotal(){ return getCartList().reduce((sum,item)=>sum+item.total,0); }
+function fee(){ return document.getElementById('deliveryType')?.value==='pickup' ? 0 : 20; }
+function renderCartBar(){
+  const count=getCartList().reduce((sum,item)=>sum+item.qty,0);
+  document.getElementById('cartCount').textContent=`${count} รายการ`;
+  document.getElementById('topCartCount').textContent=count;
+  document.getElementById('cartTotal').textContent=`รวม ${subtotal()} บาท`;
+}
+function renderCart(){
+  const list=getCartList();
+  document.getElementById('cartItems').innerHTML = list.length ? list.map(item=>`
+    <div class="cartitem"><div><strong>${item.name}</strong><br><small>${item.qty} x ${item.price} บาท</small></div><strong>${item.total} บาท</strong></div>
+  `).join('') : '<p class="empty">ยังไม่มีสินค้าในรถเข็น</p>';
+  document.getElementById('subTotal').textContent=`${subtotal()} บาท`;
+  document.getElementById('deliveryFee').textContent=`${fee()} บาท`;
+  document.getElementById('grandTotal').textContent=`${subtotal()+fee()} บาท`;
+}
+function openCart(){ document.getElementById('drawer').classList.add('open'); renderCart(); }
+function closeCart(){ document.getElementById('drawer').classList.remove('open'); }
+function sendToLine(){
+  const list=getCartList();
+  if(!list.length) return alert('กรุณาเลือกสินค้าก่อน');
+  const name=document.getElementById('customerName').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  const address=document.getElementById('address').value.trim();
+  const deliveryType=document.getElementById('deliveryType').value==='pickup'?'รับหน้าร้าน':'จัดส่ง';
+  const note=document.getElementById('note').value.trim();
+  const itemsText=list.map(item=>`- ${item.name} x ${item.qty} = ${item.total} บาท`).join('\n');
+  const message=`ออเดอร์จากควงควงมินิมาร์ท\n\n${itemsText}\n\nค่าสินค้า: ${subtotal()} บาท\nค่าส่ง: ${fee()} บาท\nยอดรวม: ${subtotal()+fee()} บาท\n\nชื่อ: ${name}\nเบอร์: ${phone}\nวิธีรับสินค้า: ${deliveryType}\nที่อยู่: ${address}\nหมายเหตุ: ${note}`;
+  const lineOaUrl='https://lin.ee/98HPvqF';
+  navigator.clipboard.writeText(message).then(()=>{ alert('คัดลอกออเดอร์แล้ว ให้วางส่งใน LINE OA ได้เลย'); window.open(lineOaUrl,'_blank'); }).catch(()=>alert(message));
+}
+renderTabs(); renderProducts(); renderCartBar();
+</script>
+</body>
+</html>
