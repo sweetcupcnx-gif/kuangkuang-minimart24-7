@@ -110,8 +110,8 @@ const products = [
   { id:'F011', name:'ยำยำ สูตรเด็ด รสต้มยำกุ้ง', price:11, category:'มาม่า/อาหารแห้ง', image:'https://i.postimg.cc/XNRhLjpP/Screenshot-2026-04-30-165106.png' },
   { id:'F012', name:'ยำยำ สูตรเด็ด รสต้มยำกุ้งน้ำข้นำ', price:11, category:'มาม่า/อาหารแห้ง', image:'https://i.postimg.cc/y6M5j1kb/Screenshot-2026-04-30-165046.png' },
   
-  { id:'F010', name:'ไข่ไก่ เบอร์ 1 ( 1 ฟอง )', price:6, category:'ของแช่เย็น', image:'https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=600&q=80' },
-  { id:'F011', name:'ไข่ไก่ เบอร์ 1 ( 10 ฟอง )', price:55, category:'ของแช่เย็น', image:'https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=600&q=80' },
+  { id:'F010', name:'ไข่ไก่ เบอร์ 1 ( 1 ฟอง )', price:6, category:'ไข่ไก่', image:'https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=600&q=80' },
+  { id:'F011', name:'ไข่ไก่ เบอร์ 1 ( 10 ฟอง )', price:55, category:'ไข่ไก่', image:'https://images.unsplash.com/photo-1506976785307-8732e854ad03?auto=format&fit=crop&w=600&q=80' },
   { id:'F012', name:'ปลากระป๋อง', price:22, category:'มาม่า/อาหารแห้ง', image:'https://images.unsplash.com/photo-1604908177522-040a1cb46b6f?auto=format&fit=crop&w=600&q=80' },
   { id:'F013', name:'ข้าวสาร 1 กก.', price:45, category:'มาม่า/อาหารแห้ง', image:'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80' },
   { id:'F014', name:'น้ำปลา', price:25, category:'มาม่า/อาหารแห้ง', image:'https://images.unsplash.com/photo-1583947215259-38e31be8751f?auto=format&fit=crop&w=600&q=80' },
@@ -141,7 +141,7 @@ const products = [
 let activeCategory='ทั้งหมด';
 const cart={};
 
-function categories(){ return ['ทั้งหมด','เครื่องดื่ม','ขนม','มาม่า/อาหารแห้ง','ของแช่เย็น','น้ำแข็ง','ของใช้','เหล้า/เบียร์','บุหรี่']; }
+function categories(){ return ['ทั้งหมด','เครื่องดื่ม','ขนม','มาม่า/อาหารแห้ง','ไข่ไก่','ของแช่เย็น','น้ำแข็ง','ของใช้','เหล้า/เบียร์','บุหรี่']; }
 
 function renderTabs(){
   document.getElementById('tabs').innerHTML = categories().map(cat =>
