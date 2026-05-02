@@ -74,6 +74,11 @@
     <label>เบอร์โทร</label><input id="phone" placeholder="เช่น 063-xxx-xxxx">
     <label>ที่อยู่ / จุดสังเกต</label><textarea id="address" placeholder="บ้านเลขที่ ซอย คอนโด หรือจุดสังเกต"></textarea>
     <label>วิธีรับสินค้า</label><select id="deliveryType" onchange="renderCart()"><option value="delivery">จัดส่ง ค่าส่ง 20 บาท</option><option value="pickup">รับหน้าร้าน ค่าส่ง 0 บาท</option></select>
+    <div style="font-size:12px;color:#555;margin-top:8px">
+  🛵 ค่าส่ง:
+  <br>09:00–00:00 → ครบ 100 ส่งฟรี / ไม่ครบ 10 บาท
+  <br>00:01–08:59 → ครบ 100 = 15 บาท / ไม่ครบ 20 บาท
+  </div>
     <label>หมายเหตุ</label><textarea id="note" placeholder="เช่น โทรก่อนส่ง / ขอของเย็น"></textarea>
     <button class="submit" style="width:100%;margin-top:16px;background:#222;color:#fff" onclick="sendToLine()">ส่งออเดอร์ทาง LINE</button>
   </div>
@@ -167,7 +172,25 @@ function getCartList(){
   return Object.entries(cart).map(([id,qty])=>{ const product=products.find(p=>p.id===id); return {...product,qty,total:product.price*qty}; });
 }
 function subtotal(){ return getCartList().reduce((sum,item)=>sum+item.total,0); }
-function fee(){ return document.getElementById('deliveryType')?.value==='pickup' ? 0 : 20; }
+function fee(){
+  if (document.getElementById('deliveryType')?.value === 'pickup') return 0;
+
+  const total = subtotal();
+  const now = new Date();
+  const hour = now.getHours();
+  const minute = now.getMinutes();
+
+  // แปลงเป็นนาที
+  const currentTime = hour * 60 + minute;
+
+  // 09:00 - 23:59
+  if (currentTime >= 9 * 60) {
+    return total >= 100 ? 0 : 10;
+  }
+
+  // 00:00 - 08:59
+  return total >= 100 ? 15 : 20;
+}
 function renderCartBar(){
   const count=getCartList().reduce((sum,item)=>sum+item.qty,0);
   document.getElementById('cartCount').textContent=`${count} รายการ`;
